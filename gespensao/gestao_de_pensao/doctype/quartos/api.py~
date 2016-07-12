@@ -1,0 +1,46 @@
+import frappe
+
+@frappe.whitelist()
+def send_invitation_emails(meeting):
+	meeting = frappe.get_doc("Meeting", meeting)
+	meeting.check_permission("email")
+
+	if meeting.status == "Planned":
+		frappe.sendmail(
+			recipients=[d.attendee for d in meeting.attendees],
+			sender=frappe.session.user,
+			subject=meeting.subject,
+			message=meeting.invitation,
+			reference_doctype=meeting.doctype,
+			reference_name=meeting.name,
+			as_bulk=True
+		)
+
+		meeting.status = "Invitation Sent"
+		meeting.save()
+
+		frappe.msgprint(_("Invitaion Sent"))
+
+	else:
+		frappe.msgprint(_("Meeting Status must be 'Planned'"))
+
+
+
+@frappe.whitelist()
+def get_meetings(start, end):
+	
+	if not frappe.has_permission("Meeting","read"):
+		raise frappe.PermissionError
+
+	return frappe.db.sql("""select
+		from_time, to_time,
+		name, subject, status,
+		0 as all_day
+	from `tabMeeting`
+	where from_time >= %(start)s and to_time <= %(end)s """, {
+		"start": start,
+		"end": end
+	}, as_dict=True)
+		
+
+

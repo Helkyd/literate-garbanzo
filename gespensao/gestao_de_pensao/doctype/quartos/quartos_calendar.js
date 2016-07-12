@@ -1,0 +1,14 @@
+// Copyright (c) 2016, Helio de Jesus and contributors
+// For license information, please see license.txt
+
+frappe.views.calendar["Quartos"] = {
+	field_map: {
+		"start": "check_in",
+		"end": "check_out",
+		"nome": "nome",		
+		"title": "nome_quarto",
+		"status": "status",
+	},	
+	
+	get_events_method: "api.get_quartos"
+}

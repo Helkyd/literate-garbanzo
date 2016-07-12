@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include gespensao *.css
+recursive-include gespensao *.csv
+recursive-include gespensao *.html
+recursive-include gespensao *.ico
+recursive-include gespensao *.js
+recursive-include gespensao *.json
+recursive-include gespensao *.md
+recursive-include gespensao *.png
+recursive-include gespensao *.py
+recursive-include gespensao *.svg
+recursive-include gespensao *.txt
+recursive-exclude gespensao *.pyc
