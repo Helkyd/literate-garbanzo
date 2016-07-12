@@ -2,8 +2,19 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('QUARTOS', {
-	refresh: function(frm) {
+	onload: function(frm) {
 
+		if (frm.doc.name != (frm.doc.numero + "-" + frm.doc.nome)){
+
+			cur_frm.toggle_enable("status",false)
+		}
+
+	}
+});
+
+frappe.ui.form.on('QUARTOS', {
+	refresh: function(frm) {
+	
 	}
 });
 
