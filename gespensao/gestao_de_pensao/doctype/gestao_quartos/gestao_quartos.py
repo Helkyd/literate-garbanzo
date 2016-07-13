@@ -43,6 +43,7 @@ class GESTAO_QUARTOS(Document):
 
 		quarto.save()		
 
-
-
+@frappe.whitelist()
+def empresa_load():
+	return frappe.db.get_value("Empresa","nome_empresa","moeda_default")
 

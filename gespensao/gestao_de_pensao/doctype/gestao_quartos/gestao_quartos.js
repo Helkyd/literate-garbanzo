@@ -1,6 +1,8 @@
 // Copyright (c) 2016, Helio de Jesus and contributors
 // For license information, please see license.txt
 
+var dd=cur_frm.call({method:"empresa_load",args:{"start":"moeda"}})
+
 frappe.ui.form.on('GESTAO_QUARTOS', {
 	onload: function(frm) {
 
@@ -36,13 +38,12 @@ frappe.ui.form.on('GESTAO_QUARTOS', {
 			}
 		}
 		calculate_totals(frm);
-
-		alert("ol")
-//		frappe.db.get_value("Empresa",{'moeda_default':'Kwanza'})
-		t = frappe.db.get_values_from_single('moeda_default','Empresa')
-		//msgprint(r.nome_empresa)	
-//		dd=frappe.get_list("Empresa",{'moeda_default':'Kwanza'})
-		msgprint(nome_empresa)
+		
+		if (dd.readyState==4){
+			show_alert("Moeda : " + dd.responseJSON.message,2)
+//			alert("carrega o Simbolo moeda ")
+			
+		}
 
 
 	}
