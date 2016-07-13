@@ -11,7 +11,7 @@ from frappe.model.naming import make_autoname
 class GESTAO_QUARTOS(Document):
 
 	def autoname(self):
-		self.name = make_autoname(self.numero_quarto + '.#####')
+		self.name = make_autoname(self.numero_quarto + '-' + '.#####')
 
 	def validate(self):
 		self.Validar_Numero_Dias()

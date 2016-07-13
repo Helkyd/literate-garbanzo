@@ -4,6 +4,13 @@
 frappe.ui.form.on('GESTAO_QUARTOS', {
 	onload: function(frm) {
 
+//		frappe.call({
+//			method: "gespensao.gestao_de_pensao.doctype.api.empresa_load",/
+//			args: null,
+//			callback: function(r){}
+//		})
+//		frappe.db.get_value("Empresa",nome_empresa,"*")
+
 		if (frm.doc.status=="Ocupado" && frm.doc.horas!="0"){
 			cur_frm.toggle_enable("numero_quarto",false)
 			cur_frm.toggle_enable("horas",false)
@@ -29,6 +36,15 @@ frappe.ui.form.on('GESTAO_QUARTOS', {
 			}
 		}
 		calculate_totals(frm);
+
+		alert("ol")
+//		frappe.db.get_value("Empresa",{'moeda_default':'Kwanza'})
+		t = frappe.db.get_values_from_single('moeda_default','Empresa')
+		//msgprint(r.nome_empresa)	
+//		dd=frappe.get_list("Empresa",{'moeda_default':'Kwanza'})
+		msgprint(nome_empresa)
+
+
 	}
 });
 
