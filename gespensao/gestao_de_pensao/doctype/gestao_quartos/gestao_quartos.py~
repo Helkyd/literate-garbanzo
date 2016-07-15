@@ -45,7 +45,5 @@ class GESTAO_QUARTOS(Document):
 
 @frappe.whitelist()
 def empresa_load():
-	a = frappe.db.get_value("Empresa","nome_empresa","moeda_default")
-	print "ADADFSAFFASF"
-	print a
-	return a
+	return frappe.db.get_value("Empresa","nome_empresa","moeda_default")
+

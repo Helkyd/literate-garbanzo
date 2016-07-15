@@ -17,7 +17,7 @@ def get_quartos(start, end):
 		
 
 frappe.whitelist()
-def Empresa_load():
+def empresa_load():
 
 	for emp in frappe.get_all("Empresa",fields=["*"],filters={"nome_empresa":("like","*")}):
 		print "EMPRESA " + emp.nome_empresa

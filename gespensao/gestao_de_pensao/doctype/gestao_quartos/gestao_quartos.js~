@@ -6,13 +6,6 @@ var dd=cur_frm.call({method:"empresa_load",args:{"start":"moeda"}})
 frappe.ui.form.on('GESTAO_QUARTOS', {
 	onload: function(frm) {
 
-//		frappe.call({
-//			method: "gespensao.gestao_de_pensao.doctype.api.empresa_load",/
-//			args: null,
-//			callback: function(r){}
-//		})
-//		frappe.db.get_value("Empresa",nome_empresa,"*")
-
 		if (frm.doc.status=="Ocupado" && frm.doc.horas!="0"){
 			cur_frm.toggle_enable("numero_quarto",false)
 			cur_frm.toggle_enable("horas",false)
@@ -21,7 +14,18 @@ frappe.ui.form.on('GESTAO_QUARTOS', {
 			cur_frm.toggle_enable("pagamento_por",false)
 
 		}else if (frm.doc.status=="Ocupado" && frm.doc.horas=="0"){
-			cur_frm.toggle_enable("status",false)		
+			cur_frm.toggle_enable("status",false)	
+		}else if (frm.doc.status=="Fechado"){
+			cur_frm.toggle_enable("numero_quarto",false)
+			cur_frm.toggle_enable("horas",false)
+			cur_frm.toggle_enable("hora_entrada",false)
+			cur_frm.toggle_enable("hora_saida",false)
+			cur_frm.toggle_enable("pagamento_por",false)	
+			cur_frm.toggle_enable("status",false)	
+//			frappe.utils.filter_dict(frm.fields_dict["servicos"].grid.docfields, {"fieldname": "nome_servico"})[0].read_only = true;	
+//			frappe.utils.filter_dict(frm.fields_dict["servicos"].grid.docfields, {"fieldname": "quantidade"})[0].read_only = true;	
+//			frappe.utils.filter_dict(frm.fields_dict["servicos"].grid.docfields, {"fieldname": "preco_servico"})[0].read_only = true;
+//			frappe.utils.filter_dict(frm.fields_dict["servicos"].grid.docfields, {"fieldname": "total"})[0].read_only = true;	
 		}
 
 
@@ -42,7 +46,9 @@ frappe.ui.form.on('GESTAO_QUARTOS', {
 		if (dd.readyState==4){
 			show_alert("Moeda : " + dd.responseJSON.message,2)
 //			alert("carrega o Simbolo moeda ")
+			
 		}
+
 
 
 	}
@@ -52,7 +58,7 @@ frappe.ui.form.on('GESTAO_QUARTOS', {
 frappe.ui.form.on('GESTAO_QUARTOS','numero_quarto',function(frm,cdt,cdn){
 
 	cur_frm.add_fetch('numero_quarto','preco','preco')
-	cur_frm.add_fetch('numero_quarto','nome_quarto','tipo_quarto')
+	cur_frm.add_fetch('numero_quarto','tipo_quarto','tipo_quarto')
 	cur_frm.refresh_fields('tipo_quarto');
 	
 
@@ -74,15 +80,24 @@ frappe.ui.form.on("RESERVAS_Services","nome_servico",function(frm,cdt,cdn){
 	var d =locals[cdt][cdn];
 //	var item = frappe.get_doc(cdt,cdn)
 //	var item = frappe.get_doc({"doctype":"SERVICOS","nome":d.nome_servico})
-
 	cur_frm.add_fetch('nome_servico','preco','preco_servico')	
+	alert(frm.doc.status=="Fechado")
+	if (frm.doc.status=="Fechado"){
+		frappe.model.set_value(cdt,cdn,'nome_servico',"")
+		frappe.utils.filter_dict(frm.fields_dict["servicos"].grid.docfields, {"fieldname": "nome_servico"})[0].read_only = true;	
+		frappe.utils.filter_dict(frm.fields_dict["servicos"].grid.docfields, {"fieldname": "quantidade"})[0].read_only = true;	
+		frappe.utils.filter_dict(frm.fields_dict["servicos"].grid.docfields, {"fieldname": "preco_servico"})[0].read_only = true;
+		frappe.utils.filter_dict(frm.fields_dict["servicos"].grid.docfields, {"fieldname": "total"})[0].read_only = true;	
+	
+	}else{
 
-	cur_frm.refresh_fields('preco_servico')
+		cur_frm.refresh_fields('preco_servico')
 
-	frappe.model.set_value(cdt,cdn,'total',d.preco_servico*d.quantidade)
-	frappe.utils.filter_dict(frm.fields_dict["servicos"].grid.docfields, {"fieldname": "preco_servico"})[0].read_only = true;
-	frappe.utils.filter_dict(frm.fields_dict["servicos"].grid.docfields, {"fieldname": "total"})[0].read_only = true;
-	calculate_totals(frm, cdt, cdn);
+		frappe.model.set_value(cdt,cdn,'total',d.preco_servico*d.quantidade)
+		frappe.utils.filter_dict(frm.fields_dict["servicos"].grid.docfields, {"fieldname": "preco_servico"})[0].read_only = true;
+		frappe.utils.filter_dict(frm.fields_dict["servicos"].grid.docfields, {"fieldname": "total"})[0].read_only = true;
+		calculate_totals(frm, cdt, cdn);
+	}
 
 });
 
@@ -178,10 +193,12 @@ frappe.ui.form.on("GESTAO_QUARTOS","status",function(frm,cdt,cdn){
 	}else if (frm.doc.status="Fechado"){
 	// Tem que verificar os pagamentos ....
 		cur_frm.toggle_display("servico_pago_por",true)
-
 		if ((frm.doc.servico_pago_por =="1-Cash") || (frm.doc.servico_pago_por =="2-TPA")){
 			// Pode prosseguir com pagamento
 			alert("Pagamento de Serviços feito. Por favor salvar registo para liberar o Quarto.")	
+		} else if (frm.doc.total_servicos==0) {
+			alert("Quarto liberado pois nao tem servicos...")	
+			
 		} else {
 			// Esta vazio .....
 			alert("Nao pode Fechar pois ainda nao foram feitos os pagamentos...")	

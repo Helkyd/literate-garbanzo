@@ -40,6 +40,8 @@ class GESTAO_QUARTOS(Document):
 			quarto.status = "Ativo"
 		elif self.status == "Livre":
 			quarto.status = "Livre"
+		elif self.status == "Fechado":
+			quarto.status = "Livre"
 
 		quarto.save()		
 
