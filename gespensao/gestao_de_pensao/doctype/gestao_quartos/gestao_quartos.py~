@@ -18,7 +18,7 @@ class GESTAO_QUARTOS(Document):
 
 
 	def Validar_Numero_Dias(self):
-		if self.horas == "0":
+		if self.horas <= 0:
 			frappe.throw(_("Horas tem que ser 1 ou mais."))
 
 		elif self.hora_entrada == self.hora_saida:
@@ -34,11 +34,13 @@ class GESTAO_QUARTOS(Document):
 		# Change Quarto status 
 		quarto = frappe.get_doc("QUARTOS", self.numero_quarto)
 		
-		if self.status == "Ocupado":
+		if self.status_reserva == "Ocupado":
 			quarto.status = "Ocupado"
-		elif self.status == "Ativo":
+		elif self.status_reserva == "Ativo":
 			quarto.status = "Ativo"
-		elif self.status == "Livre":
+		elif self.status_reserva == "Livre":
+			quarto.status = "Livre"
+		elif self.status_reserva == "Fechado":
 			quarto.status = "Livre"
 
 		quarto.save()		

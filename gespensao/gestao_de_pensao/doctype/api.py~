@@ -17,11 +17,17 @@ def get_quartos(start, end):
 	}, as_dict=True)
 		
 
+
 @frappe.whitelist()
-def empresa_load():
-	a = frappe.db.get_value("Empresa","nome_empresa","moeda_default")
-	print "ADADFSAFFASF"
-	print "ADADFSAFFASF"
-	print "ADADFSAFFASF"
-	print a
-	return a
+def get_gestao_quartos_check(quarto):
+
+	r= frappe.db.sql("""select numero_quarto, status
+	from `tabGESTAO_QUARTOS`
+	where status = "Ativo" and numero_quarto = %s """,(quarto), as_dict=False)
+# and status='%s """%(quarto,"Ativo"))
+
+
+	print "AAAAAAAAAAA"	
+	print "BBBBBBBBBBB"
+	print r
+

@@ -34,12 +34,33 @@ class RESERVAS(Document):
 			frappe.throw(_("Verificar Data de Entrada. Inferior a Data de Hoje."))
 
 	def Quartos_Status(self):
-
-		# Change Quarto status 
-		quarto = frappe.get_doc("QUARTOS", self.numero_quarto)
-		
-		if self.status == "Ocupado":
+		if (self.reservation_status=="Nova"):
+			# Change Quarto status 
+			quarto = frappe.get_doc("QUARTOS", self.numero_quarto)			
 			quarto.status = "Reservado"
 
-		quarto.save()		
-	
+			quarto.save()		
+		elif (self.reservation_status=="Ativo"):
+			
+			quarto = frappe.get_doc("QUARTOS",self.numero_quarto)
+			# Criar o registo no Gestao_Quartos poe ATIVO
+			frappe.get_doc({
+				"doctype":"GESTAO_QUARTOS",
+				"name": make_autoname(self.numero_quarto + '-' + '.#####'),
+				"numero_quarto": self.numero_quarto,			
+				"tipo_quarto": quarto.tipo_quarto,
+				"preco":quarto.preco,		
+				"hora_entrada":self.check_in,
+				"hora_saida":self.check_out,
+				"horas": self.number_days,
+				"total": int(self.number_days) * quarto.preco,
+				"pagamento_por": "Cash",
+				"reserva_numero":self.name
+			}).insert()
+
+			# Change Quarto status 
+			quarto = frappe.get_doc("QUARTOS", self.numero_quarto)		
+			quarto.status = "Ocupado"
+
+			quarto.save()
+

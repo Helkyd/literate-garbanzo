@@ -7,6 +7,8 @@ frappe.ui.form.on('QUARTOS', {
 		if (frm.doc.name != (frm.doc.numero + "-" + frm.doc.nome)){
 
 			cur_frm.toggle_enable("status",false)
+		}else if ((frm.doc.status=="Ocupado") || (frm.doc.status=="Reservado")){
+			cur_frm.toggle_enable("status",false)
 		}
 
 	}
@@ -25,4 +27,7 @@ frappe.ui.form.on('QUARTOS','tipo_quarto',function(frm,cdt,cdn){
 	cur_frm.refresh_fields()
 
 });
+
+
+
 

@@ -3,15 +3,17 @@
 
 // render
 frappe.listview_settings['GESTAO_QUARTOS'] = {
-	add_fields: ["status","tipo_quarto"],
+	add_fields: ["status_reserva","tipo_quarto"],
 
 	get_indicator: function(doc) {
 
 		console.log(doc.status)
-		if (doc.status== "Livre" ) {
+		if (doc.status_reserva== "Livre" ) {
 			return [__("Livre - " + doc.tipo_quarto), "green"]
-		} else if (doc.status== "Ocupado" ) {
+		} else if (doc.status_reserva== "Ocupado" ) {
 			return [__("" + doc.tipo_quarto), "red"]
+		} else if (doc.status_reserva== "Ativo" ) {
+			return [__("" + doc.tipo_quarto), "orange"]
 		
 		}
 	},

@@ -6,26 +6,39 @@ var dd=cur_frm.call({method:"empresa_load",args:{"start":"moeda"}})
 frappe.ui.form.on('GESTAO_QUARTOS', {
 	onload: function(frm) {
 
-		if (frm.doc.status=="Ocupado" && frm.doc.horas!="0"){
+		if (frm.doc.status_reserva=="Ocupado" && frm.doc.horas >=0){
 			cur_frm.toggle_enable("numero_quarto",false)
 			cur_frm.toggle_enable("horas",false)
 			cur_frm.toggle_enable("hora_entrada",false)
 			cur_frm.toggle_enable("hora_saida",false)
 			cur_frm.toggle_enable("pagamento_por",false)
+			cur_frm.set_df_property("reserva_numero","hidden",true)
+			cur_frm.set_df_property("servico_pago_por","hidden",true)
 
-		}else if (frm.doc.status=="Ocupado" && frm.doc.horas=="0"){
-			cur_frm.toggle_enable("status",false)	
-		}else if (frm.doc.status=="Fechado"){
+		}else if (frm.doc.status_reserva=="Ocupado" && frm.doc.horas ==undefined){
+			cur_frm.toggle_enable("status_reserva",false)	
+			cur_frm.set_df_property("reserva_numero","hidden",true)
+			cur_frm.set_df_property("servico_pago_por","hidden",true)
+		}else if (frm.doc.status_reserva=="Fechado"){
 			cur_frm.toggle_enable("numero_quarto",false)
 			cur_frm.toggle_enable("horas",false)
 			cur_frm.toggle_enable("hora_entrada",false)
 			cur_frm.toggle_enable("hora_saida",false)
 			cur_frm.toggle_enable("pagamento_por",false)	
-			cur_frm.toggle_enable("status",false)	
-//			frappe.utils.filter_dict(frm.fields_dict["servicos"].grid.docfields, {"fieldname": "nome_servico"})[0].read_only = true;	
-//			frappe.utils.filter_dict(frm.fields_dict["servicos"].grid.docfields, {"fieldname": "quantidade"})[0].read_only = true;	
-//			frappe.utils.filter_dict(frm.fields_dict["servicos"].grid.docfields, {"fieldname": "preco_servico"})[0].read_only = true;
-//			frappe.utils.filter_dict(frm.fields_dict["servicos"].grid.docfields, {"fieldname": "total"})[0].read_only = true;	
+			cur_frm.toggle_enable("status_reserva",false)	
+			cur_frm.set_df_property("reserva_numero","hidden",true)
+			cur_frm.set_df_property("servico_pago_por","hidden",true)
+
+		}else if (frm.doc.status_reserva=="Ativo"){
+			cur_frm.set_df_property("horas","label","Dias")
+			cur_frm.toggle_enable("numero_quarto",false)
+			cur_frm.toggle_enable("horas",false)
+			cur_frm.toggle_enable("hora_entrada",false)
+			cur_frm.toggle_enable("hora_saida",false)
+			cur_frm.toggle_enable("pagamento_por",false)
+			cur_frm.set_df_property("reserva_numero","hidden",true)
+			cur_frm.set_df_property("servico_pago_por","hidden",true)
+
 		}
 
 
@@ -66,7 +79,7 @@ frappe.ui.form.on('GESTAO_QUARTOS','numero_quarto',function(frm,cdt,cdn){
 
 frappe.ui.form.on('GESTAO_QUARTOS','horas',function(frm,cdt,cdn){
 
-	
+
 	frappe.model.set_value(cdt,cdn,'hora_saida',moment(cur_frm.doc.hora_entrada).add(cur_frm.doc.horas,'hours'))
 	frappe.model.set_value(cdt,cdn,'total',frm.doc.preco*frm.doc.horas)
 	cur_frm.refresh_fields();	
@@ -82,7 +95,7 @@ frappe.ui.form.on("RESERVAS_Services","nome_servico",function(frm,cdt,cdn){
 //	var item = frappe.get_doc({"doctype":"SERVICOS","nome":d.nome_servico})
 	cur_frm.add_fetch('nome_servico','preco','preco_servico')	
 
-	if (frm.doc.status=="Fechado"){
+	if (frm.doc.status_reserva=="Fechado"){
 		//frappe.model.set_value(cdt,cdn,'nome_servico',"")
 		frappe.utils.filter_dict(frm.fields_dict["servicos"].grid.docfields, {"fieldname": "nome_servico"})[0].read_only = true;	
 		frappe.utils.filter_dict(frm.fields_dict["servicos"].grid.docfields, {"fieldname": "quantidade"})[0].read_only = true;	
@@ -155,22 +168,22 @@ cur_frm.cscript.pagar_servicos = function(frm,cdt,cdn) {
 		// Status da Gestao_quarto para 
 		if (c.priority=="4-Não Pagar"){
 			//Manter Gestao_quarto status OCUPADO
-			frappe.model.set_value(cdt,cdn,'status',"Ocupado")
-			cur_frm.refresh_fields("status");	
+			frappe.model.set_value(cdt,cdn,'status_reserva',"Ocupado")
+			cur_frm.refresh_fields("status_reserva");	
 
 		} else if ((c.priority=="1-Cash") || (c.priority=="2-TPA")) {
 			//Gestao_quarto status Fechado ... Ja nao se pode alterar.
-			frappe.model.set_value(cdt,cdn,'status',"Fechado")
+			frappe.model.set_value(cdt,cdn,'status_reserva',"Fechado")
 			frappe.model.set_value(cdt,cdn,'servico_pago_por',c.priority)
-			cur_frm.refresh_fields("status");	
+			cur_frm.refresh_fields("status_reserva");	
 		} else if (c.priority=="3-Conta-corrente") {
 			//Gestao_quarto status Fechado ... Ja nao se pode alterar.
 			//Contas ou valores para a Conta corrente do cliente.
 
 			//Dialog a pedir o Cliente
-			frappe.model.set_value(cdt,cdn,'status',"Fechado")
+			frappe.model.set_value(cdt,cdn,'status_reserva',"Fechado")
 			frappe.model.set_value(cdt,cdn,'servico_pago_por',c.priority)
-			cur_frm.refresh_fields("status");	
+			cur_frm.refresh_fields("status_reserva");	
 
 
 
@@ -184,13 +197,14 @@ cur_frm.cscript.pagar_servicos = function(frm,cdt,cdn) {
 }
 
 
-frappe.ui.form.on("GESTAO_QUARTOS","status",function(frm,cdt,cdn){
+frappe.ui.form.on("GESTAO_QUARTOS","status_reserva",function(frm,cdt,cdn){
 
-	if (frm.doc.status=="Livre"){
+
+	if (frm.doc.status_reserva=="Livre"){
 	// Tem que verificar se as contas estao pagas.
 		alert("Verificando contas")
 
-	}else if (frm.doc.status="Fechado"){
+	}else if (frm.doc.status_reserva=="Fechado"){
 	// Tem que verificar os pagamentos ....
 		cur_frm.toggle_display("servico_pago_por",true)
 		if ((frm.doc.servico_pago_por =="1-Cash") || (frm.doc.servico_pago_por =="2-TPA")){
@@ -205,6 +219,9 @@ frappe.ui.form.on("GESTAO_QUARTOS","status",function(frm,cdt,cdn){
 //			frappe.model.set_value(cdt,cdn,'status',"Ocupado")
 //			cur_frm.refresh_fields("status");	
 		}
+	}else if ((frm.doc.status_reserva=="Ativo") && (frm.doc.reserva_numero !="")){
+		alert("Quarto Ativo... por favor Salvar registo")
+		
 	}
 
 });
