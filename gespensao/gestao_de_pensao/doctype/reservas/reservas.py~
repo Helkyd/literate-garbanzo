@@ -23,7 +23,8 @@ class RESERVAS(Document):
 		self.Validar_Numero_Dias()
 
 	def on_update(self):
-		self.Quartos_Status()
+		if (self.reservation_status !="Cancelada"):
+			self.Quartos_Status()
 
 
 	def Validar_Numero_Dias(self):
@@ -55,12 +56,22 @@ class RESERVAS(Document):
 				"horas": self.number_days,
 				"total": int(self.number_days) * quarto.preco,
 				"pagamento_por": "Cash",
+				"status_reserva": "Ativo",
 				"reserva_numero":self.name
 			}).insert()
 
 			# Change Quarto status 
 			quarto = frappe.get_doc("QUARTOS", self.numero_quarto)		
 			quarto.status = "Ocupado"
+
+			quarto.save()
+
+		elif (self.reservation_status=="Cancelada"):
+
+
+			# Change Quarto status 
+			quarto = frappe.get_doc("QUARTOS", self.numero_quarto)		
+			quarto.status = "Livre"
 
 			quarto.save()
 

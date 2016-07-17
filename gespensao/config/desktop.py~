@@ -11,14 +11,21 @@ def get_data():
 			"type": "module",
 			"label": _("Gestao de Pensao")
 		},
-
-	"QUARTOS":{
+		{
 			
 			"doctype": "QUARTOS",
 			"color": "#f39c12",
 			"icon": "octicon octicon-package",
 			"type": "link",
 			"link": "List/QUARTOS"
+		},
+		{
+			"module_name": "TESTE",
+			"_doctype": "TESTE",
+			"color": "#1abc9c",
+			"icon": "octicon octicon-tag",
+			"type": "link",
+			"link": "Desk/TESTE"
 		},
 		{
 			"module_name": "Customer",

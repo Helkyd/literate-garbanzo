@@ -13,4 +13,7 @@ class QUARTOS(Document):
 		self.name = self.numero + "-" + self.nome
 
 
+@frappe.whitelist()
+def empresa_load():
+	return frappe.db.get_value("Empresa",None,"moeda_default")
 

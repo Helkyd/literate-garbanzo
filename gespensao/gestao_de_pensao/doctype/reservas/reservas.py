@@ -20,7 +20,8 @@ class RESERVAS(Document):
 		self.name = make_autoname('RESERVA/' + '.#####')
 
 	def validate(self):
-		self.Validar_Numero_Dias()
+		if (self.reservation_status !="Cancelada"):
+			self.Validar_Numero_Dias()
 
 	def on_update(self):
 		self.Quartos_Status()
@@ -62,6 +63,15 @@ class RESERVAS(Document):
 			# Change Quarto status 
 			quarto = frappe.get_doc("QUARTOS", self.numero_quarto)		
 			quarto.status = "Ocupado"
+
+			quarto.save()
+
+		elif (self.reservation_status=="Cancelada"):
+
+
+			# Change Quarto status 
+			quarto = frappe.get_doc("QUARTOS", self.numero_quarto)		
+			quarto.status = "Livre"
 
 			quarto.save()
 

@@ -62,6 +62,13 @@ frappe.ui.form.on('GESTAO_QUARTOS', {
 			
 		}
 
+		if (cur_frm.doc.status_reserva=="Ocupado"){
+			frm.set_df_property("status_reserva","options","Ocupado\nFechado")
+		}else if (cur_frm.doc.status_reserva=="Ativo"){
+			frm.set_df_property("status_reserva","options","Ativo\nFechado")
+		}
+
+
 
 
 	}
@@ -70,9 +77,10 @@ frappe.ui.form.on('GESTAO_QUARTOS', {
 
 frappe.ui.form.on('GESTAO_QUARTOS','numero_quarto',function(frm,cdt,cdn){
 
-	cur_frm.add_fetch('numero_quarto','preco','preco')
-	cur_frm.add_fetch('numero_quarto','tipo_quarto','tipo_quarto')
-	cur_frm.refresh_fields('tipo_quarto');
+//	if (frm.doc.numero_quarto !=""){
+		quartos_('QUARTOS',frm.doc.numero_quarto)
+//	}
+	cur_frm.refresh_fields('preco','tipo_quarto');
 	
 
 });
@@ -238,4 +246,11 @@ frappe.ui.form.on("GESTAO_QUARTOS","pagamento_por",function(frm,cdt,cdn){
 
 });
 
+var quartos_ = function(frm,cdt,cdn){
+	frappe.model.with_doc(frm, cdt, function() { 
+		var d = frappe.model.get_doc(frm,cdt)
+		cur_frm.doc.preco = d.preco
+		cur_frm.doc.tipo_quarto = d.tipo_quarto
+	});
+}
 

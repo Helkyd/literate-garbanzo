@@ -1,6 +1,8 @@
 // Copyright (c) 2016, Helio de Jesus and contributors
 // For license information, please see license.txt
 
+var dd=cur_frm.call({method:"empresa_load",args:{"start":"moeda"}})
+
 frappe.ui.form.on('QUARTOS', {
 	onload: function(frm) {
 
@@ -14,19 +16,23 @@ frappe.ui.form.on('QUARTOS', {
 	}
 });
 
-frappe.ui.form.on('QUARTOS', {
-	refresh: function(frm) {
-	
-	}
-});
-
 
 frappe.ui.form.on('QUARTOS','tipo_quarto',function(frm,cdt,cdn){
 
-	cur_frm.add_fetch('tipo_quarto','preco','preco')
-	cur_frm.refresh_fields()
+	quartos_('QUARTOS_TIPO',frm.doc.tipo_quarto)
+	cur_frm.refresh_fields('preco')
 
 });
+
+var quartos_ = function(frm,cdt,cdn){
+	frappe.model.with_doc(frm, cdt, function() { 
+		var d = frappe.model.get_doc(frm,cdt)
+		cur_frm.doc.preco = d.preco
+		cur_frm.refresh_fields()
+
+
+	});
+}
 
 
 

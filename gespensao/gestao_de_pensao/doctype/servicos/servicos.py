@@ -10,7 +10,9 @@ from frappe.model.naming import make_autoname
 
 class SERVICOS(Document):
 
+
 	def autoname(self):
 		
 		self.name = self.nome
+		self.nome_empresa= frappe.db.get_value("Empresa",None,"nome_empresa")
 

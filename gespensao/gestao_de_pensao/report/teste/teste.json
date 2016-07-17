@@ -7,12 +7,12 @@
  "doctype": "Report", 
  "idx": 0, 
  "is_standard": "Yes", 
- "modified": "2016-07-15 12:51:39.881483", 
+ "modified": "2016-07-16 21:33:28.680962", 
  "modified_by": "Administrator", 
  "module": "Gestao de Pensao", 
  "name": "teste", 
  "owner": "Administrator", 
- "ref_doctype": "GESTAO_QUARTOS", 
+ "ref_doctype": "RESERVAS", 
  "report_name": "teste", 
- "report_type": "Report Builder"
+ "report_type": "Script Report"
 }

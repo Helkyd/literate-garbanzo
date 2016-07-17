@@ -1,6 +1,41 @@
 // Copyright (c) 2016, Helio de Jesus and contributors
 // For license information, please see license.txt
 
+frappe.ui.form.on('RESERVAS', {
+	onload: function(frm) {
+
+		if (frm.doc.reservation_status=="Nova" && frm.doc.pay_advance !="Sim"){
+			cur_frm.toggle_enable("booked_by",false)
+			cur_frm.toggle_enable("numero_cliente",false)	
+
+		}else if (frm.doc.reservation_status=="Cancelada" ){
+			cur_frm.toggle_enable("booked_by",false)	
+			cur_frm.toggle_enable("check_in",false)	
+			cur_frm.toggle_enable("check_out",false)	
+			cur_frm.toggle_enable("num_adults",false)	
+			cur_frm.toggle_enable("num_childs",false)	
+			cur_frm.toggle_enable("num_infants",false)	
+			cur_frm.toggle_enable("numero_quarto",false)	
+			cur_frm.toggle_enable("numero_cliente",false)	
+			cur_frm.toggle_enable("reservation_status",false)
+			cur_frm.toggle_enable("pay_advance",false)		
+		
+		}else if (frm.doc.reservation_status=="Ativo"){
+			cur_frm.toggle_enable("booked_by",false)	
+			cur_frm.toggle_enable("check_in",false)	
+			cur_frm.toggle_enable("check_out",false)	
+			cur_frm.toggle_enable("num_adults",false)	
+			cur_frm.toggle_enable("num_childs",false)	
+			cur_frm.toggle_enable("num_infants",false)	
+			cur_frm.toggle_enable("numero_quarto",false)	
+			cur_frm.toggle_enable("numero_cliente",false)	
+			cur_frm.toggle_enable("pay_advance",false)
+
+		}
+
+
+	}
+});
 
 frappe.ui.form.on('RESERVAS', {
 	refresh: function(frm) {
@@ -12,6 +47,9 @@ frappe.ui.form.on('RESERVAS', {
 				}
 			}
 		}
+		if (cur_frm.doc.reservation_status=="Ativo"){
+			frm.set_df_property("reservation_status","options","Ativo\nPago")
+		}
 		
 
 	}
@@ -20,9 +58,10 @@ frappe.ui.form.on('RESERVAS', {
 
 frappe.ui.form.on('RESERVAS','numero_quarto',function(frm,cdt,cdn){
 
-	cur_frm.add_fetch('numero_quarto','preco','preco_quarto')
+	quartos_('QUARTOS',frm.doc.numero_quarto)
+	cur_frm.refresh_fields('preco_quarto','total_reserva')
 	frappe.model.set_value(cdt,cdn,'total_reserva',(frm.doc.preco_quarto*frm.doc.number_days))
-	cur_frm.refresh_fields('preco_quarto');
+	cur_frm.refresh_fields();
 
 
 
@@ -75,8 +114,9 @@ frappe.ui.form.on('RESERVAS','reservation_status',function(frm,cdt,cdn){
 			},
 			callback: function(r) {
 //				msgprint(r.message)
-				if (r.message){
+				if (r.message !=undefined){
 					alert("Ocupado ou Ativo")
+					return
 				}else{
 					alert("Pode ser Cancelado")
 				}
@@ -90,3 +130,13 @@ frappe.ui.form.on('RESERVAS','reservation_status',function(frm,cdt,cdn){
 
 	}	
 });
+
+var quartos_ = function(frm,cdt,cdn){
+	frappe.model.with_doc(frm, cdt, function() { 
+		var d = frappe.model.get_doc(frm,cdt)
+		cur_frm.doc.preco_quarto = d.preco
+		cur_frm.refresh_fields()
+
+
+	});
+}

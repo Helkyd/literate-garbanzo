@@ -7,4 +7,10 @@ import frappe
 from frappe.model.document import Document
 
 class Empresa(Document):
-	pass
+
+	def autoname(self):
+		
+		self.name = self.nome_empresa
+
+
+

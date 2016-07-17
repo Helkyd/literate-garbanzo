@@ -23,11 +23,7 @@ def get_gestao_quartos_check(quarto):
 
 	r= frappe.db.sql("""select numero_quarto, status
 	from `tabGESTAO_QUARTOS`
-	where (status = "Ativo" or status="Ocupado") and numero_quarto = %s """,(quarto), as_dict=False)
-# and status='%s """%(quarto,"Ativo"))
-
-
-	print "AAAAAAAAAAA"	
-	print "BBBBBBBBBBB"
+	where status="Ocupado" and numero_quarto = %s """,(quarto), as_dict=False)
 	print r
+	return r
 

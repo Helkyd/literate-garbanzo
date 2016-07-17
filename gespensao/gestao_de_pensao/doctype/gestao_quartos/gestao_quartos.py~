@@ -37,7 +37,7 @@ class GESTAO_QUARTOS(Document):
 		if self.status_reserva == "Ocupado":
 			quarto.status = "Ocupado"
 		elif self.status_reserva == "Ativo":
-			quarto.status = "Ativo"
+			quarto.status = "Ocupado"
 		elif self.status_reserva == "Livre":
 			quarto.status = "Livre"
 		elif self.status_reserva == "Fechado":
