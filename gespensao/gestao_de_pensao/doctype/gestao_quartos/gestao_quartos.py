@@ -12,6 +12,7 @@ class GESTAO_QUARTOS(Document):
 
 	def autoname(self):
 		self.name = make_autoname(self.numero_quarto + '-' + '.#####')
+		self.nome_empresa= frappe.db.get_value("Empresa",None,"nome_empresa")
 
 	def validate(self):
 		self.Validar_Numero_Dias()

@@ -1,7 +1,7 @@
 // Copyright (c) 2016, Helio de Jesus and contributors
 // For license information, please see license.txt
 
-var dd=cur_frm.call({method:"empresa_load",args:{"start":"moeda"}})
+//var dd=cur_frm.call({method:"empresa_load",args:{"start":"moeda"}})
 
 frappe.ui.form.on('GESTAO_QUARTOS', {
 	onload: function(frm) {
@@ -19,6 +19,7 @@ frappe.ui.form.on('GESTAO_QUARTOS', {
 			cur_frm.toggle_enable("status_reserva",false)	
 			cur_frm.set_df_property("reserva_numero","hidden",true)
 			cur_frm.set_df_property("servico_pago_por","hidden",true)
+
 		}else if (frm.doc.status_reserva=="Fechado"){
 			cur_frm.toggle_enable("numero_quarto",false)
 			cur_frm.toggle_enable("horas",false)
@@ -56,11 +57,11 @@ frappe.ui.form.on('GESTAO_QUARTOS', {
 		}
 		calculate_totals(frm);
 		
-		if (dd.readyState==4){
-			show_alert("Moeda : " + dd.responseJSON.message,2)
+//		if (dd.readyState==4){
+//			show_alert("Moeda : " + dd.responseJSON.message,2)
 //			alert("carrega o Simbolo moeda ")
 			
-		}
+//		}
 
 		if (cur_frm.doc.status_reserva=="Ocupado"){
 			frm.set_df_property("status_reserva","options","Ocupado\nFechado")
@@ -99,8 +100,6 @@ frappe.ui.form.on("RESERVAS_Services","nome_servico",function(frm,cdt,cdn){
 
 
 	var d =locals[cdt][cdn];
-//	var item = frappe.get_doc(cdt,cdn)
-//	var item = frappe.get_doc({"doctype":"SERVICOS","nome":d.nome_servico})
 	cur_frm.add_fetch('nome_servico','preco','preco_servico')	
 
 	if (frm.doc.status_reserva=="Fechado"){

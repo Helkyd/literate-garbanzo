@@ -18,6 +18,7 @@ class RESERVAS(Document):
 	def autoname(self):
 		self.codigo = make_autoname('RESERVA/' + '.#####')
 		self.name = make_autoname('RESERVA/' + '.#####')
+		self.nome_empresa= frappe.db.get_value("Empresa",None,"nome_empresa")
 
 	def validate(self):
 		if (self.reservation_status !="Cancelada"):

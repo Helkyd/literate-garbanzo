@@ -28,7 +28,6 @@ var quartos_ = function(frm,cdt,cdn){
 	frappe.model.with_doc(frm, cdt, function() { 
 		var d = frappe.model.get_doc(frm,cdt)
 		cur_frm.doc.preco = d.preco
-//		frappe.model.set_value(cdt,cdn,"preco",d.preco)
 		cur_frm.refresh_fields()
 
 

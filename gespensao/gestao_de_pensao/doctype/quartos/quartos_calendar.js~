@@ -1,18 +1,14 @@
 // Copyright (c) 2016, Helio de Jesus and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on('QUARTOS', {
-	refresh: function(frm) {
-
-	}
-});
-
-
-frappe.ui.form.on('QUARTOS','tipo_quarto',function(frm,cdt,cdn){
-
-	cur_frm.add_fetch('tipo_quarto','descricao','nome_quarto')
-	cur_frm.add_fetch('tipo_quarto','preco','preco')
-	cur_frm.refresh_fields()
-
-});
-
+frappe.views.calendar["Quartos"] = {
+	field_map: {
+		"start": "check_in",
+		"end": "check_out",
+		"nome": "numero_quarto",		
+		"title": "nome_quarto",
+		"status": "status",
+	},	
+	
+	get_events_method: "api.get_quartos"
+}

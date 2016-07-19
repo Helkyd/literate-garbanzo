@@ -7,4 +7,9 @@ import frappe
 from frappe.model.document import Document
 
 class QUARTOS_TIPO(Document):
-	pass
+
+	def autoname(self):
+		
+		self.name = self.descricao
+
+

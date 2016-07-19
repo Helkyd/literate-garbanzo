@@ -20,11 +20,11 @@ class RESERVAS(Document):
 		self.name = make_autoname('RESERVA/' + '.#####')
 
 	def validate(self):
-		self.Validar_Numero_Dias()
+		if (self.reservation_status !="Cancelada"):
+			self.Validar_Numero_Dias()
 
 	def on_update(self):
-		if (self.reservation_status !="Cancelada"):
-			self.Quartos_Status()
+		self.Quartos_Status()
 
 
 	def Validar_Numero_Dias(self):

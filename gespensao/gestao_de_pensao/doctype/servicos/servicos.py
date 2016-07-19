@@ -13,6 +13,6 @@ class SERVICOS(Document):
 
 	def autoname(self):
 		
-		self.name = self.nome
+		self.name = self.descricao_servico
 		self.nome_empresa= frappe.db.get_value("Empresa",None,"nome_empresa")
 

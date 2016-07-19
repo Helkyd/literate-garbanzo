@@ -8,6 +8,10 @@ frappe.ui.form.on('RESERVAS', {
 			cur_frm.toggle_enable("booked_by",false)
 			cur_frm.toggle_enable("numero_cliente",false)	
 
+		}else if (frm.doc.reservation_status=="Nova" && frm.doc.pay_advance !="Sim" && frm.doc.numero_cliente ==undefined){
+			cur_frm.toggle_enable("booked_by",true)
+			cur_frm.toggle_enable("numero_cliente",true)	
+
 		}else if (frm.doc.reservation_status=="Cancelada" ){
 			cur_frm.toggle_enable("booked_by",false)	
 			cur_frm.toggle_enable("check_in",false)	
@@ -59,7 +63,7 @@ frappe.ui.form.on('RESERVAS', {
 frappe.ui.form.on('RESERVAS','numero_quarto',function(frm,cdt,cdn){
 
 	quartos_('QUARTOS',frm.doc.numero_quarto)
-	cur_frm.refresh_fields('preco_quarto')
+	cur_frm.refresh_fields('preco_quarto','total_reserva')
 	frappe.model.set_value(cdt,cdn,'total_reserva',(frm.doc.preco_quarto*frm.doc.number_days))
 	cur_frm.refresh_fields();
 

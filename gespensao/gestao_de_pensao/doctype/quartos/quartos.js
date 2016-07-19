@@ -6,7 +6,7 @@ var dd=cur_frm.call({method:"empresa_load",args:{"start":"moeda"}})
 frappe.ui.form.on('QUARTOS', {
 	onload: function(frm) {
 
-		if (frm.doc.name != (frm.doc.numero + "-" + frm.doc.nome)){
+		if (frm.doc.name != (frm.doc.numero + "-" + frm.doc.nome_quarto)){
 
 			cur_frm.toggle_enable("status",false)
 		}else if ((frm.doc.status=="Ocupado") || (frm.doc.status=="Reservado")){
